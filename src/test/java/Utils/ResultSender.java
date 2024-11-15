@@ -26,5 +26,4 @@ public class ResultSender {
     public static void send(final Point point){
         INFLXUDB.write(point);
     }
-
 }

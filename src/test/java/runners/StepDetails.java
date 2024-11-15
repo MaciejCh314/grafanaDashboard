@@ -1,29 +1,20 @@
 package runners;
 
+import io.cucumber.java.Scenario;
 import io.cucumber.plugin.ConcurrentEventListener;
 import io.cucumber.plugin.event.*;
 
 public class StepDetails implements ConcurrentEventListener {
 
+    public static String scenarioName;
     public static String keyWord;
     public static String stepName;
     public static String methodName;
-
     public static Throwable error;
 
-    public EventHandler<TestStepStarted> stepStartedEventHandler = new EventHandler<TestStepStarted>() {
-        @Override
-        public void receive(TestStepStarted event) {
-            handleTestStepStarted(event);
-        }
-    };
+    public EventHandler<TestStepStarted> stepStartedEventHandler = this::handleTestStepStarted;
 
-    public EventHandler<TestStepFinished> stepFinishedEventHandler = new EventHandler<TestStepFinished>() {
-        @Override
-        public void receive(TestStepFinished event) {
-            handleTestStepFinished(event);
-        }
-    };
+    public EventHandler<TestStepFinished> stepFinishedEventHandler = this::handleTestStepFinished;
 
     @Override
     public void setEventPublisher(EventPublisher publisher) {
@@ -32,6 +23,7 @@ public class StepDetails implements ConcurrentEventListener {
     }
 
     private void handleTestStepStarted(TestStepStarted event) {
+        scenarioName = event.getTestCase().getName();
         if (event.getTestStep() instanceof PickleStepTestStep) {
             PickleStepTestStep testStep = (PickleStepTestStep)event.getTestStep();
             keyWord = testStep.getStep().getKeyword();
